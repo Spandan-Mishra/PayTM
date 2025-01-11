@@ -6,6 +6,7 @@ const { PORT } = require("./config");
 
 app.use(express.json());
 app.use(cors());
+
 app.use('/api/v1', indexRouter);
 
 app.listen(3000, () => {

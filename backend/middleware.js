@@ -1,6 +1,6 @@
 
-const jwt = require('jsonwebtoken');
-const { JWT_TOKEN } = require('../config');
+import * as jwt from 'jsonwebtoken';
+import { JWT_TOKEN } from './config.js';
 
 export const authMiddleware = (req, res, next) => {
     try {

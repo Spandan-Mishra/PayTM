@@ -2,12 +2,13 @@
 const express = require('express');
 const router = express.Router();
 const { User } = require('../db');
+const { Account } = require('../db');
 const app = express();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { z } = require('zod');
 const { JWT_TOKEN } = require('../config');
-const userMiddleware = require('../middlewares/user');
+const userMiddleware = require('../middleware');
 
 const userSchema = z.object({
     username: z.string().min(3, { message: "Username must be atleast 3 characters" }).max(30, { message: "Username must be atmost 30 characters" }),
@@ -46,6 +47,11 @@ router.post('/signup', async (req, res) => {
         lastName,
         password: hashedPassword
     }).returning('id');
+
+    await Account.create({
+        userId: user.id,
+        balance: Math.random() * 10000
+    })
 
     res.status(201).json({
         userId: user.id

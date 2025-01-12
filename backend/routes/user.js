@@ -7,14 +7,14 @@ const app = express();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { z } = require('zod');
-const { JWT_TOKEN } = require('../config');
-const userMiddleware = require('../middleware');
+const { JWT_SECRET } = require('../config');
+const { userMiddleware } = require('../middleware');
 
 const userSchema = z.object({
     username: z.string().min(3, { message: "Username must be atleast 3 characters" }).max(30, { message: "Username must be atmost 30 characters" }),
     firstName: z.string().min(3, { message: "First name must be atleast 3 characters" }).max(20, { message: "First name must be atmost 20 characters" }),
     lastName: z.string().min(3, { message: "Lastname must be atleast 3 characters" }).max(20, { message: "Lastname must be atmost 20 characters" }),
-    password: z.string().regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", { message: "Password must contain atleast 8 characters, one uppercase, one lowercase, one number and one special character" }),
+    password: z.string().regex(new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/), { message: "Password must contain atleast 8 characters, one uppercase, one lowercase, one number and one special character" }),
 })
 
 const updateSchema = z.object({
@@ -46,15 +46,15 @@ router.post('/signup', async (req, res) => {
         firstName,
         lastName,
         password: hashedPassword
-    }).returning('id');
+    });
 
     await Account.create({
-        userId: user.id,
+        userId: user._id,
         balance: Math.random() * 10000
     })
 
     res.status(201).json({
-        userId: user.id
+        userId: user._id
     })
 })
 
@@ -79,8 +79,8 @@ router.post('/signin', async (req, res) => {
     }
 
     const token = jwt.sign({
-        userId: user.id
-    }, JWT_TOKEN);
+        userId: user._id
+    }, JWT_SECRET);
 
     res.status(200).json({
         token: token

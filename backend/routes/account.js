@@ -1,23 +1,23 @@
 
 const express = require('express');
 const { Account, User } = require('../db');
-const userMiddleware = require('../middlewares/user');
+const { userMiddleware } = require('../middleware');
 const { default: mongoose } = require('mongoose');
 const router = express.Router();
 
 router.get('/balance', userMiddleware, async (req, res) => {
-    const balance = await Account.findOne({
+    const account = await Account.findOne({
         userId: req.userId
     }).select('balance');
 
-    if(!balance) {
+    if(!account) {
         return res.status(404).json({
             message: "No account found"
         })
     }
 
     res.status(200).json({
-        balance
+        balance: account.balance
     })
 })
 
@@ -75,20 +75,5 @@ router.post('/transfer', userMiddleware, async (req, res) => {
     })
 })
 
-transfer({
-    userId: "65ac44e10ab2ec750ca666a5",
-    body: {
-        to: "65ac44e40ab2ec750ca666aa",
-        amount: 100
-    }
-})
-
-transfer({
-    userId: "65ac44e10ab2ec750ca666a5",
-    body: {
-        to: "65ac44e40ab2ec750ca666aa",
-        amount: 100
-    }
-})
 
 module.exports = router;

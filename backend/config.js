@@ -1,3 +1,5 @@
 
-export const JWT_TOKEN="guddudev";
-export const PORT=3000;
+module.exports = {
+    JWT_SECRET: "guddudev",
+    PORT: 3000,
+}

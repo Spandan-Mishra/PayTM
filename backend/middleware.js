@@ -1,22 +1,29 @@
 
-import * as jwt from 'jsonwebtoken';
-import { JWT_TOKEN } from './config.js';
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("./config");
 
-export const authMiddleware = (req, res, next) => {
-    try {
-        const token = req.headers["authorization"];
-        const decoded = jwt.verify(token, JWT_TOKEN);
-        if(decoded && decoded.userId) {
-            req.userId = decoded.userId;
-            next();
-        }
-
+const userMiddleware = (req, res, next) => {
+    const token = req.headers.authorization;
+    if (!token) {
+        console.log("hi");
         return res.status(403).json({
             message: "Unauthorized"
-        })
-    } catch(e) {
-        return res.status(403).json({
-            message: "Unauthorized"
-        })
+        });
     }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        req.userId = decoded.userId;
+
+        next();
+    } catch (err) {
+        return res.status(403).json({
+            message: "Unauthorized"
+        });
+    }
+};
+
+module.exports = {
+    userMiddleware
 }

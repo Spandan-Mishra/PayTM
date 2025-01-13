@@ -32,7 +32,8 @@ router.post('/transfer', userMiddleware, async (req, res) => {
     })
     .session(session);
 
-    if(!fromAccount || fromAccount.balance < amount) {
+    const formattedAmount = Math.floor(amount * 100);
+    if(!fromAccount || fromAccount.balance < formattedAmount) {
         await session.abortTransaction();
         return res.status(400).json({
             message: "Insufficient balance"
@@ -55,7 +56,7 @@ router.post('/transfer', userMiddleware, async (req, res) => {
         userId: req.userId
     }, {
         $inc: {
-            balance: -amount
+            balance: -formattedAmount
         }
     })
     .session(session);
@@ -64,7 +65,7 @@ router.post('/transfer', userMiddleware, async (req, res) => {
         userId: toAccount.userId
     }, {
         $inc: {
-            balance: amount
+            balance: formattedAmount
         }
     })
     .session(session);

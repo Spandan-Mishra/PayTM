@@ -17,6 +17,11 @@ const userSchema = z.object({
     password: z.string().regex(new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/), { message: "Password must contain atleast 8 characters, one uppercase, one lowercase, one number and one special character" }),
 })
 
+const signinSchema = z.object({
+    username: z.string().min(1, { message: "Username is required" }),
+    password: z.string().min(1, { message: "Password is required" }), 
+})
+
 const updateSchema = z.object({
     firstName: z.string().min(3, { message: "First name must be atleast 3 characters" }).max(20, { message: "First name must be atmost 20 characters" }).optional(),
     lastName: z.string().min(3, { message: "Lastname must be atleast 3 characters" }).max(20, { message: "Lastname must be atmost 20 characters" }).optional(),
@@ -53,12 +58,22 @@ router.post('/signup', async (req, res) => {
         balance: Math.floor(Math.random() * 1000000)
     })
 
-    res.status(201).json({
+    const token = jwt.sign({
         userId: user._id
+    }, JWT_SECRET);
+
+    res.status(200).json({
+        message: "User signed up successfully",
+        token,
     })
 })
 
 router.post('/signin', async (req, res) => {
+    const parsedData = signinSchema.safeParse(req.body);
+    if(!parsedData.success) {
+        return res.status(400).json({ message: parsedData.error.errors[0].message });
+    }
+
     const { username, password } = req.body;
 
     const user = await User.findOne({
@@ -71,8 +86,8 @@ router.post('/signin', async (req, res) => {
         })
     }
 
-    const isValidPassword = bcrypt.compare(password, user.password);
-    if(!isValidPassword) {
+    const { result } = bcrypt.compare(password, user.password);
+    if(!result) {
         return res.status(401).json({
             message: "Invalid credentials"
         })

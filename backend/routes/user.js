@@ -127,7 +127,8 @@ router.get('/bulk', userMiddleware, async (req, res) => {
         { firstName: /.*filter.*/ },
         { lastName: /.*filter.*/ },
     ])
-    .select('-password');
+    .select('-password')
+    .limit(10);
 
     if(!users) {
         res.status(404).json({

@@ -5,12 +5,12 @@ import { InputBox } from '../components/InputBox';
 import { Button } from '../components/Button';
 import { useState } from 'react';
 import axios from 'axios';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FormError } from '../components/FormError';
 import { FormWarning } from '../components/FormWarning';
 
 export function Signin() {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const [formError, setFormError] = useState("");
     const [formData, setFormData] = useState({
         username: "",
@@ -38,8 +38,7 @@ export function Signin() {
                 username: "",
                 password: ""
             })
-            console.log(response.data);
-            // navigate("/dashboard");
+            navigate("/dashboard");
         } catch(e) {
             setFormError(e.response.data.message);
         }

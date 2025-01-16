@@ -1,8 +1,9 @@
+import { TopBar } from "../components/TopBar";
 
 export function Dashboard() {
     return (
-        <div>
-            <h1>Dashboard</h1>
+        <div className="h-screen bg-gray-100">
+            <TopBar />
         </div>
     )
 }

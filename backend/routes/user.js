@@ -124,8 +124,8 @@ router.get('/bulk', userMiddleware, async (req, res) => {
     const users = await User
     .find()
     .or([
-        { firstName: /.*filter.*/ },
-        { lastName: /.*filter.*/ },
+        { firstName: { $regex: filter } },
+        { lastName: { $regex: filter } }
     ])
     .select('-password')
     .limit(10);

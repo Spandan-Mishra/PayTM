@@ -6,8 +6,8 @@ import { Button } from '../components/Button';
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FormError } from '../components/FormError';
 import { FormWarning } from '../components/FormWarning';
+import { Error } from '../components/Error';
 
 export function Signin() {
     const navigate = useNavigate();
@@ -50,10 +50,10 @@ export function Signin() {
                 <div className='bg-white hover:shadow-lg hover:shadow-black duration-150 rounded-md text-center p-10'>
                     <Heading label={"Signin"} />
                     <Subheading label={"Signin to your account"} />
-                    <InputBox label={"Enter your username"} name={"username"} placeholder={"dev@123"} type={"text"} onChange={handleChange} />
-                    <InputBox label={"Enter your password"} name={"password"} placeholder={"Dev@123"} type={"password"} onChange={handleChange} />
-                    <FormError label={formError} />
-                    <Button label={"Signin"} onClick={handleSubmit}/>
+                    <InputBox label={"Enter your username"} name={"username"} placeholder={"dev@123"} type={"text"} onChange={handleChange} size={"sm"} />
+                    <InputBox label={"Enter your password"} name={"password"} placeholder={"Dev@123"} type={"password"} onChange={handleChange} size={"sm"} />
+                    <Error label={formError} size="sm" />
+                    <Button label={"Signin"} onClick={handleSubmit} variant="primary" />
                     <FormWarning label={"Don't have an account?"} text={"Signup"} to={"/signup"} />
                 </div>
             </div>

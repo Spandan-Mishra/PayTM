@@ -16,6 +16,6 @@ export function InputBox({ label, name, placeholder, type, onChange, size }) {
         <div className={headerSize[size]+" text-black font-bold mb-2 pl-2"}>
             {label}
         </div>
-        <input name={name} onChange={onChange} className={inputSize[size]+" rounded-md border border-slate-300 hover:shadow-md hover:shadow-blue-800 duration-200"} placeholder={placeholder} type={type} />
+        <input name={name} onChange={onChange} className={inputSize[size]+" rounded-md border border-slate-300 focus:shadow-md focus:shadow-blue-800 focus:outline-none duration-200"} placeholder={placeholder} type={type} />
     </div>
 }
